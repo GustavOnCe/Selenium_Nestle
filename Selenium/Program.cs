@@ -3,32 +3,53 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Threading;
 using System.Windows;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Selenium
 {
     class Program
     {
+       
         static void Main(string[] args)
         {
-            //string numero_viaje;
-            //Console.WriteLine("Por favor ingrese el numero de viaje: ");
-            //numero_viaje = Console.ReadLine();
+
+            //Console.WriteLine("Cuantos viajes desea buscar (INT): ");
+            //int no_viajes = Convert.ToInt32(Console.ReadLine());
+            var viajes = new List<string>();
 
             Console.WriteLine("Ingrese el/los numeros de viaje");
-            string[] viajes = new string[10];
-            for (int i = 0; i < 10; i++)
+            var i = 0;
+            while (i < 100) {
+                string numero_buscar = Console.ReadLine();
+
+                if (numero_buscar != "")
+                {
+                    viajes.Add(numero_buscar);
+                    i++;
+
+                }
+                else {
+                    break;
+                }
+            }
+
+           /* string[] viajes = new string[no_viajes];
+            for (int i = 0; i < viajes.Length; i++)
             {
                 viajes[i] = Console.ReadLine();
+                no_viajes++;
 
                 if(viajes[i] == "")
                 {
                     break;
                 }
-            }
-            //for (int i = 0; i < viajes.Length; i++)
-            //{
-            //    Console.WriteLine(viajes[i]);
-            //}
+            } */
+           /* for (int i = 0; i < viajes.Length; i++)
+            {
+                Console.WriteLine(viajes[i]);
+            }*/
             
             ChromeDriver controlador = new ChromeDriver();
             controlador.Navigate().GoToUrl("https://app.rcontrol.com.mx/corp/index.html");
@@ -51,16 +72,18 @@ namespace Selenium
             IWebElement clickCargar = controlador.FindElement(By.XPath("/html/body/div[2]/header/div[2]/div/div[1]/div[1]/ul/li[3]/ul/li/a"));
             clickCargar.Click();
             Thread.Sleep(6000);
-            IWebElement clickNestle = controlador.FindElement(By.XPath("/html/body/div[2]/div/div/div/div/section/div[3]/div[2]/div/div/ul/li[15]"));
+            IWebElement clickNestle = controlador.FindElement(By.XPath("/html/body/div[2]/div/div/div/div/section/div[3]/div[2]/div/div/ul/li[16]"));
             clickNestle.Click();
 
-            for (int i = 0; i < viajes.Length; i++)
+            //string originalWindow = controlador.CurrentWindowHandle;
+
+            for (int x = 0; x < viajes.Count; x++)
             {
                 IWebElement clickBuscar = controlador.FindElement(By.XPath("/html/body/div[2]/div/div/div/div/section/div[5]/button"));
                 clickBuscar.Click();
                 Thread.Sleep(3000);
                 IWebElement viaje = controlador.FindElement(By.XPath("/html/body/div[2]/div/div/div/div/section/div[5]/div/div[2]/div/label/input"));
-                viaje.SendKeys(viajes[0 + i]);
+                viaje.SendKeys(viajes[0 + x]);
                 Thread.Sleep(3000);
                 IWebElement limpiar_viaje = controlador.FindElement(By.XPath("/html/body/div[2]/div/div/div/div/section/div[5]/div/div[2]/div/label/input"));
                 limpiar_viaje.Clear();
@@ -78,19 +101,53 @@ namespace Selenium
                     Thread.Sleep(1500);
                     IWebElement contraer = controlador.FindElement(By.XPath("/html/body/div[2]/div/div/div/div/section/div[2]/span[1]"));
                     contraer.Click();
+ 
                 }
                 catch
                 {
-                    Console.WriteLine("Viaje {0} no encontrado. Favor de validarlo",viajes[i]);
+                    Console.WriteLine("Viaje {0} no encontrado. Favor de validarlo",viajes[x]);
                 }
+
+               
+
 
                 Thread.Sleep(1500);
             }
 
+            string sourcePath = @"C:\Users\Admin\Downloads\";
+            string targetPath = @"C:\Users\Admin\Desktop\NESTLE_ejemplo\";
+
+            string[] files = Directory.GetFiles(sourcePath, "*.csv");
+
+            foreach (string file in files)
+            {
+
+                string filename = Path.GetFileName(file);
+                string destino = Path.Combine(targetPath, filename);
+
+                File.Copy(file, destino);
+
+                File.Delete(file);
+
+            }
+
+            Thread.Sleep(10000);
+
+            /*var folder = new DirectoryInfo(@"C:\Users\Admin\Downloads\");
+            string from = @"C:\Users\Admin\Downloads\";
+            string to = @"C:\Users\Admin\Desktop\ejemplo\";
+
+            if (folder.Exists)
+            {
+                var files = folder.GetFiles(".csv");
+                files.ToList().ForEach(f => File.Move(from, to));
+            }*/
+
             //int vueltas = viajes.Length;
 
 
-
+            controlador.Close();
+            Console.WriteLine(":::::::::::::EL PROCESO FINALIZO:::::::::::::");
 
 
 
