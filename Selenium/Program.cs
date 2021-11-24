@@ -126,16 +126,22 @@ namespace Selenium
 
             string[] files = Directory.GetFiles(sourcePath, "*.csv");
 
-            foreach (string file in files)
+            if (files.Length > 0)
             {
+                foreach (string file in files)
+                {
 
-                string filename = Path.GetFileName(file);
-                string destino = Path.Combine(targetPath, filename);
+                    string filename = Path.GetFileName(file);
+                    string destino = Path.Combine(targetPath, filename);
 
-                File.Copy(file, destino);
+                    File.Copy(file, destino);
 
-                File.Delete(file);
+                    File.Delete(file);
 
+                }
+            }
+            else {
+                Console.WriteLine(":::::::::::::ARCHIVO NO EXISTE:::::::::::::");
             }
 
             Thread.Sleep(10000);
