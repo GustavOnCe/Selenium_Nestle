@@ -106,6 +106,12 @@ namespace Selenium
                 catch
                 {
                     Console.WriteLine("Viaje {0} no encontrado. Favor de validarlo",viajes[x]);
+                    if (viajes.Count == 1)
+                    {
+                        controlador.Close();
+                        Console.WriteLine(":::::::::::::EL PROCESO FINALIZO:::::::::::::");
+                        break;
+                    }
                 }
 
                
@@ -114,8 +120,9 @@ namespace Selenium
                 Thread.Sleep(1500);
             }
 
-            string sourcePath = @"C:\Users\Admin\Downloads\";
-            string targetPath = @"C:\Users\Admin\Desktop\NESTLE_ejemplo\";
+            string sourcePath = @"C:\Users\ThinkPad\Downloads\";
+            string targetPath = @"\\DESKTOP-V45M447\Z:\";
+
 
             string[] files = Directory.GetFiles(sourcePath, "*.csv");
 
