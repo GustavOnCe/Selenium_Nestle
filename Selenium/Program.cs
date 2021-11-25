@@ -15,7 +15,6 @@ namespace Selenium
         static void Main(string[] args)
         {
 
-
             //Console.WriteLine("Cuantos viajes desea buscar (INT): ");
             //int no_viajes = Convert.ToInt32(Console.ReadLine());
             var viajes = new List<string>();
@@ -107,7 +106,6 @@ namespace Selenium
                 catch
                 {
                     Console.WriteLine("Viaje {0} no encontrado. Favor de validarlo",viajes[x]);
-                
                 }
 
                
@@ -125,20 +123,13 @@ namespace Selenium
             {
                 foreach (string file in files)
                 {
-                    try
-                    {
-                        string filename = Path.GetFileName(file);
-                        string destino = Path.Combine(targetPath, filename);
 
-                        File.Copy(file, destino);
+                    string filename = Path.GetFileName(file);
+                    string destino = Path.Combine(targetPath, filename);
 
-                        File.Delete(file);
-                    }
-                    catch (Exception ex) {
-                        Console.WriteLine(ex.Message);
-                    }
+                    File.Copy(file, destino);
 
-                   
+                    File.Delete(file);
 
                 }
             }
