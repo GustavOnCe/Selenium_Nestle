@@ -15,10 +15,9 @@ namespace Selenium
         static void Main(string[] args)
         {
 
-            //Console.WriteLine("Cuantos viajes desea buscar (INT): ");
-            //int no_viajes = Convert.ToInt32(Console.ReadLine());
+           //Se crea la lista viajes
             var viajes = new List<string>();
-
+           //Se asignan valores a la lista a travez de consola   
             Console.WriteLine("Ingrese el/los numeros de viaje");
             var i = 0;
             while (i < 100) {
@@ -34,31 +33,13 @@ namespace Selenium
                     break;
                 }
             }
-
-           /* string[] viajes = new string[no_viajes];
-            for (int i = 0; i < viajes.Length; i++)
-            {
-                viajes[i] = Console.ReadLine();
-                no_viajes++;
-
-                if(viajes[i] == "")
-                {
-                    break;
-                }
-            } */
-           /* for (int i = 0; i < viajes.Length; i++)
-            {
-                Console.WriteLine(viajes[i]);
-            }*/
             
+            //Se abre el navegador en la pagina rcontrol
             ChromeDriver controlador = new ChromeDriver();
             controlador.Navigate().GoToUrl("https://app.rcontrol.com.mx/corp/index.html");
             controlador.Manage().Window.Maximize();
 
-            //By Validador = By.ClassName("sorting_1");
-
-            //IWebElement clickAcceso = controlador.FindElement(By.XPath("/html/body/div[2]/div/a/img"));
-            //clickAcceso.Click();
+            //Se logea en el portal y va al apartado NESTLE_CARTA
             Thread.Sleep(2000);
             IWebElement usuario = controlador.FindElement(By.XPath("/html/body/div[1]/div/div/form/div[1]/input"));
             usuario.SendKeys("tms_ccpmigue");
@@ -75,7 +56,7 @@ namespace Selenium
             IWebElement clickNestle = controlador.FindElement(By.XPath("/html/body/div[2]/div/div/div/div/section/div[3]/div[2]/div/div/ul/li[16]"));
             clickNestle.Click();
 
-            //string originalWindow = controlador.CurrentWindowHandle;
+            //Descarga los distintos viajes ingresados desde la consola
 
             for (int x = 0; x < viajes.Count; x++)
             {
@@ -103,9 +84,11 @@ namespace Selenium
                     contraer.Click();
  
                 }
+                //Si el viaje no existe manda un mensaje a la consola y continua con los demas viajes
                 catch
                 {
                     Console.WriteLine("Viaje {0} no encontrado. Favor de validarlo",viajes[x]);
+                    //Si la lista no contiene mas viajes por descargar, finaliza el proceso
                     if (viajes.Count == 1)
                     {
                         controlador.Close();
@@ -119,32 +102,43 @@ namespace Selenium
 
                 Thread.Sleep(1500);
             }
-
+            //Declaramos las rutas de donde se van a copiar y pegar los csv´s
             string sourcePath = @"C:\Users\ThinkPad\Downloads\";
-            string targetPath = @"\\DESKTOP-V45M447\Z:\";
+            string targetPath = @"C:\Users\ThinkPad\Desktop\ADJUNTOS\";
 
-
+            //Creamos un arreglo para almacenar los archivos descargados
             string[] files = Directory.GetFiles(sourcePath, "*.csv");
 
+            //Llenamos el arreglo con los archivos y los copiamos a la carpeta especificada 
             if (files.Length > 0)
             {
                 foreach (string file in files)
                 {
+                    try {
+                        string filename = Path.GetFileName(file);
+                        string destino = Path.Combine(targetPath, filename);
 
-                    string filename = Path.GetFileName(file);
-                    string destino = Path.Combine(targetPath, filename);
+                        File.Copy(file, destino);
 
-                    File.Copy(file, destino);
-
-                    File.Delete(file);
+                        File.Delete(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    controlador.Close();
+                    Thread.Sleep(10000);
+                    Console.WriteLine(":::::::::::::EL PROCESO FINALIZO:::::::::::::");
 
                 }
             }
-            else {
+            else 
+            {
                 Console.WriteLine(":::::::::::::ARCHIVO NO EXISTE:::::::::::::");
+                
             }
 
-            Thread.Sleep(10000);
+           
 
             /*var folder = new DirectoryInfo(@"C:\Users\Admin\Downloads\");
             string from = @"C:\Users\Admin\Downloads\";
@@ -159,8 +153,7 @@ namespace Selenium
             //int vueltas = viajes.Length;
 
 
-            controlador.Close();
-            Console.WriteLine(":::::::::::::EL PROCESO FINALIZO:::::::::::::");
+            
 
 
 
